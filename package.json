@@ -1,0 +1,115 @@
+{
+  "name": "customisable-log-analyser",
+  "displayName": "customisable-log-analyser",
+  "description": "Analyses and highlights log files with custom rules",
+  "publisher": "Potato cake",
+  "icon": "images/icon-placeholder.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/McCzarny/customisable-log-analyser"
+	},
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:customisable-log-analyser.helloWorld",
+		"onView:testView",
+    "*"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+			"activitybar": [
+				{
+					"id": "customisable-log-analyser",
+					"title": "Customisable Log Analyser",
+					"icon": "images/icon-placeholder.svg"
+				}
+			]
+		},
+    "views": {
+			"customisable-log-analyser": [
+				{
+					"id": "customisable-log-analyser-view",
+					"name": "Customisable Log Analyser",
+					"icon": "images/icon-placeholder.svg",
+					"contextualTitle": "Customisable Log Analyser"
+				}
+			]
+    },
+    "commands": [
+      {
+        "command": "customisable-log-analyser.runscripts.all",
+        "title": "Run scripts with the all files",
+        "icon": "$(run-all)"
+      },
+      {
+        "command": "customisable-log-analyser.runscripts.current",
+        "title": "Run scripts with the current file",
+        "icon": "$(play)"
+      },
+      {
+        "command": "customisable-log-analyser.clear",
+        "title": "Clear all issues",
+        "icon": "$(clear-all)"
+      }
+    ],
+		"menus": {
+      "view/title": [
+        {
+          "command": "customisable-log-analyser.runscripts.current",
+					"group": "navigation"
+        },
+        {
+          "command": "customisable-log-analyser.runscripts.all",
+					"group": "navigation"
+        },
+        {
+          "command": "customisable-log-analyser.clear",
+					"group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Customisable Log Analyser",
+      "properties": {
+        "customisable-log-analyser.scripsDirectory": {
+          "type": ["string"],
+          "default": ".analysers",
+          "description": "Specifies the folder path containing the scripts for log analysis."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.71.0",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.7.4",
+    "ts-loader": "^9.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "@vscode/test-electron": "^2.1.5"
+  }
+}
