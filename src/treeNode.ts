@@ -22,6 +22,36 @@ interface EntryGroup {
 
 export type TreeNode = Entry | EntryGroup | FileReference;
 
+export function createLevel(name: string) : TreeNode {
+     let level = {name: name, uri: [name]} as EntryGroup;
+     return level;
+}
+
+export function createEntry(parent: TreeNode, title: string, description: string, fileReference: string) : TreeNode {
+    const uri: string[] = [...parent.uri, title];
+    const fileReferenceEntry = {uri: [...uri, fileReference], filePath: fileReference, line: 5} as FileReference;
+
+    const entry = {uri: uri, title: title, description: description, fileReference: [fileReferenceEntry]} as Entry;
+
+    if ("entries" in parent) {
+        parent.entries.push(entry);
+    }
+
+    return entry;
+}
+
+export function getOrAddEntry(parent: TreeNode, title: string, description: string, fileReference: string) : TreeNode {
+    if("entries" in parent) {
+        for (const node of parent.entries) {
+            if ('title' in node && node.title === title) {
+                return node;
+            }
+        }
+    }
+
+    return createEntry(parent, title, description, fileReference);
+}
+
 export function isLeafNode(element: TreeNode): boolean {
   return !('filePath' in element);
 }

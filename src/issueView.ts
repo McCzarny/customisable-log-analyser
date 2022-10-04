@@ -44,6 +44,27 @@ const nodes: TreeNode[] = [
   } as TreeNode,
 ];
 
+export class IssueManager {
+    constructor() {}
+
+    getOrAddLevel(name: string) : TreeNode {
+        for (const node of nodes) {
+            if ('name' in node && node.name === name) {
+                return node;
+            }
+        }
+
+        const level = treeNode.createLevel(name)
+        nodes.push(level)
+        return level;
+    }
+
+    addIssue(level: string, title: string, fileReference: string) {
+        let node = this.getOrAddLevel(level);
+        treeNode.getOrAddEntry(node, title, "dummy description", fileReference);
+    }
+}
+
 function aNodeWithIdTreeDataProvider(): vscode.TreeDataProvider<TreeNode> {
   return {
     getChildren: (element?: TreeNode): TreeNode[] => {

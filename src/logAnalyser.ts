@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import path = require('path');
 import cp = require('child_process');
+import { IssueManager } from './issueView';
 
 function getRootDir(): string | undefined {
   let analysersDirectory = vscode.workspace
@@ -40,7 +41,7 @@ export async function listAnalysers() {
   }
 }
 
-export async function runWithTheCurrentFile() {
+export async function runWithTheCurrentFile(issueManager : IssueManager) {
   const analysersDirectory = getRootDir();
   if (analysersDirectory) {
     for (const [name, type] of await vscode.workspace.fs.readDirectory(
@@ -58,6 +59,11 @@ export async function runWithTheCurrentFile() {
           function (error, stdout, stderr) {
             console.log('stdout: ' + stdout);
             console.log('stderr: ' + stderr);
+            const obj = JSON.parse(stdout);
+            if ("level" in obj && "title" in obj && "fileReference" in obj) {
+                issueManager.addIssue(obj.level, obj.title, obj.fileReference);
+            }
+
             if (error !== null) {
               console.log('exec error: ' + error);
             }

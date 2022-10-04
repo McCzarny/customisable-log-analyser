@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { TestView } from './issueView';
+import { TestView, IssueManager } from './issueView';
 import * as logAnalyser from './logAnalyser';
 
 
@@ -22,15 +22,17 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from customisable-log-analyser!');
 	});
 
+	const fllogan = new TestView(context);
+	const issueManager = new IssueManager();
+
 	context.subscriptions.push(disposable);
 
 	let runscriptsWithCurrent = vscode.commands.registerCommand('customisable-log-analyser.runscripts.current', () => {
-		logAnalyser.runWithTheCurrentFile();
+		logAnalyser.runWithTheCurrentFile(issueManager);
 	});
 
 	context.subscriptions.push(runscriptsWithCurrent);
 
-	new TestView(context);
 }
 
 // this method is called when your extension is deactivated
