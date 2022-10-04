@@ -23,7 +23,8 @@ interface EntryGroup {
 export type TreeNode = Entry | EntryGroup | FileReference;
 
 export function createLevel(name: string) : TreeNode {
-     let level = {name: name, uri: [name]} as EntryGroup;
+     let level = {name: name, icon: '' ,uri: [name], entries: []} as EntryGroup;
+     console.debug("Created level: " + JSON.stringify(level, null, 4));
      return level;
 }
 
@@ -34,7 +35,10 @@ export function createEntry(parent: TreeNode, title: string, description: string
     const entry = {uri: uri, title: title, description: description, fileReference: [fileReferenceEntry]} as Entry;
 
     if ("entries" in parent) {
+        console.debug("Adding: " + entry + " to " + parent);
         parent.entries.push(entry);
+    } else {
+        console.debug("There is no entries in " + JSON.stringify(parent, null, 4));
     }
 
     return entry;

@@ -35,7 +35,7 @@ const testInfo: TreeNode[] = [
   },
 ];
 
-const nodes: TreeNode[] = [
+const testNodes: TreeNode[] = [
   {
     name: 'info',
     icon: '$(info)',
@@ -43,6 +43,9 @@ const nodes: TreeNode[] = [
     uri: ['info'],
   } as TreeNode,
 ];
+
+const nodes: TreeNode[] = [];
+const event: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter<TreeNode | undefined>();
 
 export class IssueManager {
     constructor() {}
@@ -54,14 +57,18 @@ export class IssueManager {
             }
         }
 
-        const level = treeNode.createLevel(name)
-        nodes.push(level)
+        const level = treeNode.createLevel(name);
+        console.debug("Addign new node: " + name);
+        nodes.push(level);
+        event.fire(undefined);
         return level;
     }
 
     addIssue(level: string, title: string, fileReference: string) {
         let node = this.getOrAddLevel(level);
-        treeNode.getOrAddEntry(node, title, "dummy description", fileReference);
+        console.debug("Got level: " + JSON.stringify(node, null, 4));
+        const entry = treeNode.getOrAddEntry(node, title, "dummy description", fileReference);
+        event.fire(entry);
     }
 }
 
@@ -74,6 +81,7 @@ function aNodeWithIdTreeDataProvider(): vscode.TreeDataProvider<TreeNode> {
       const treeItem = getTreeItem(element);
       return treeItem;
     },
+    onDidChangeTreeData: event.event
   };
 }
 
