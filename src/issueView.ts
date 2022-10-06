@@ -66,9 +66,15 @@ export class IssueManager {
 
     addIssue(level: string, title: string, fileReference: string) {
         let node = this.getOrAddLevel(level);
+
         console.debug("Got level: " + JSON.stringify(node, null, 4));
         const entry = treeNode.getOrAddEntry(node, title, "dummy description", fileReference);
         event.fire(entry);
+    }
+
+    clearIssues() {
+        nodes.length = 0;
+        event.fire(undefined);
     }
 }
 
@@ -104,12 +110,14 @@ function getTreeItem(key: TreeNode): vscode.TreeItem {
   const treeElement = key; //getTreeElement(key);
   // An example of how to use codicons in a MarkdownString in a tree item tooltip.
   const tooltip = new vscode.MarkdownString(
-    `${treeNode.getIcon(key)} ${treeNode.getTooltip(key)}`,
+    `$(${treeNode.getIcon(key)}) ${treeNode.getTooltip(key)}`,
     true,
   );
+  const icon = treeNode.getIcon(key);
   return {
     label: /**vscode.TreeItemLabel**/ <any>{ label: treeNode.getLabel(key) },
     id: key.uri.join('/'),
+    iconPath: icon ? new vscode.ThemeIcon(icon) : undefined,
     command: treeNode.getAction(key),
     tooltip,
     collapsibleState:

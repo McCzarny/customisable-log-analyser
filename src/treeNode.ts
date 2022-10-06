@@ -15,7 +15,7 @@ interface Entry {
 
 interface EntryGroup {
   name: string
-  icon: string
+  icon?: string
   uri: string[]
   entries: Entry[]
 }
@@ -23,14 +23,31 @@ interface EntryGroup {
 export type TreeNode = Entry | EntryGroup | FileReference;
 
 export function createLevel(name: string) : TreeNode {
-     let level = {name: name, icon: '' ,uri: [name], entries: []} as EntryGroup;
+    let icon = null;
+    if (name === 'info') {
+        icon = 'extensions-info-message';
+    }
+
+     let level = {name: name, icon: icon ,uri: [name], entries: []} as EntryGroup;
      console.debug("Created level: " + JSON.stringify(level, null, 4));
      return level;
 }
 
+function createFileReference(parentUri: string[], fileReference: string) : FileReference {
+    let fileNumber = 0;
+    let numberReferencePattern = /(.*):(\d+)$/g;
+    const matches = fileReference.matchAll(numberReferencePattern).next();
+    if (!matches.done) {
+        fileReference = matches.value[1];
+        fileNumber = parseInt(matches.value[2]);
+    }
+
+    return {uri: [...parentUri, fileReference, fileNumber], filePath: fileReference, line: fileNumber} as FileReference;
+}
+
 export function createEntry(parent: TreeNode, title: string, description: string, fileReference: string) : TreeNode {
     const uri: string[] = [...parent.uri, title];
-    const fileReferenceEntry = {uri: [...uri, fileReference], filePath: fileReference, line: 5} as FileReference;
+    const fileReferenceEntry = createFileReference(uri, fileReference);
 
     const entry = {uri: uri, title: title, description: description, fileReference: [fileReferenceEntry]} as Entry;
 
@@ -48,6 +65,9 @@ export function getOrAddEntry(parent: TreeNode, title: string, description: stri
     if("entries" in parent) {
         for (const node of parent.entries) {
             if ('title' in node && node.title === title) {
+                const fileReferenceEntry = createFileReference(node.uri, fileReference);
+                node.fileReference.push(fileReferenceEntry);
+
                 return node;
             }
         }
@@ -84,12 +104,12 @@ export function getTooltip(element: TreeNode): string | undefined {
   return undefined;
 }
 
-export function getIcon(element: TreeNode): string {
+export function getIcon(element: TreeNode): string | undefined {
   if ('icon' in element) {
     return element.icon;
   }
 
-  return '';
+  return undefined;
 }
 
 export function getAction(element: TreeNode): vscode.Command | undefined {

@@ -41,6 +41,14 @@ export async function listAnalysers() {
   }
 }
 
+function processIssues(issueManager: IssueManager, issues: any[]) {
+    issues.forEach(issue => {
+        if ("level" in issue && "title" in issue && "fileReference" in issue) {
+            issueManager.addIssue(issue.level, issue.title, issue.fileReference);
+        }
+    });
+}
+
 export async function runWithTheCurrentFile(issueManager : IssueManager) {
   const analysersDirectory = getRootDir();
   if (analysersDirectory) {
@@ -60,8 +68,9 @@ export async function runWithTheCurrentFile(issueManager : IssueManager) {
             console.log('stdout: ' + stdout);
             console.log('stderr: ' + stderr);
             const obj = JSON.parse(stdout);
-            if ("level" in obj && "title" in obj && "fileReference" in obj) {
-                issueManager.addIssue(obj.level, obj.title, obj.fileReference);
+
+            if ("issues" in obj) {
+                processIssues(issueManager, obj.issues);
             }
 
             if (error !== null) {

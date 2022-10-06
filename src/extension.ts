@@ -33,6 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(runscriptsWithCurrent);
 
+	
+	let clearIssues = vscode.commands.registerCommand('customisable-log-analyser.clear', () => {
+		issueManager.clearIssues();
+	});
+
+	context.subscriptions.push(clearIssues);
 }
 
 // this method is called when your extension is deactivated
