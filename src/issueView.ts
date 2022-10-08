@@ -15,35 +15,6 @@ export class TestView {
   }
 }
 
-const testInfo: TreeNode[] = [
-  {
-    uri: ['info', 'Version is: x.x.x.'],
-    title: 'Version is: x.x.x.',
-    description: 'Version of XXX is x.x.x.',
-    fileReference: [
-      {
-        uri: [
-          'info',
-          'Version is: x.x.x.',
-          'C:\\Users\\czarneckim\\repositories\\customisable-log-analyser\\CHANGELOG.md',
-        ],
-        filePath:
-          'C:\\Users\\czarneckim\\repositories\\customisable-log-analyser\\CHANGELOG.md',
-        line: 5,
-      },
-    ],
-  },
-];
-
-const testNodes: TreeNode[] = [
-  {
-    name: 'info',
-    icon: '$(info)',
-    entries: testInfo,
-    uri: ['info'],
-  } as TreeNode,
-];
-
 const nodes: TreeNode[] = [];
 const event: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter<TreeNode | undefined>();
 
@@ -64,11 +35,15 @@ export class IssueManager {
         return level;
     }
 
-    addIssue(level: string, title: string, fileReference: string) {
+    getRootNodes() : TreeNode[] {
+      return nodes;
+    }
+
+    addIssue(level: string, title: string, description: string, fileReference: string) {
         let node = this.getOrAddLevel(level);
 
         console.debug("Got level: " + JSON.stringify(node, null, 4));
-        const entry = treeNode.getOrAddEntry(node, title, "dummy description", fileReference);
+        const entry = treeNode.getOrAddEntry(node, title, description, fileReference);
         event.fire(entry);
     }
 
@@ -109,10 +84,10 @@ function getChildren(key?: TreeNode): TreeNode[] {
 function getTreeItem(key: TreeNode): vscode.TreeItem {
   const treeElement = key; //getTreeElement(key);
   // An example of how to use codicons in a MarkdownString in a tree item tooltip.
-  const tooltip = new vscode.MarkdownString(
+  const tooltip = treeNode.getTooltip(key) ? new vscode.MarkdownString(
     `$(${treeNode.getIcon(key)}) ${treeNode.getTooltip(key)}`,
     true,
-  );
+  ) : undefined;
   const icon = treeNode.getIcon(key);
   return {
     label: /**vscode.TreeItemLabel**/ <any>{ label: treeNode.getLabel(key) },

@@ -3,7 +3,10 @@
 import * as vscode from 'vscode';
 import { TestView, IssueManager } from './issueView';
 import * as logAnalyser from './logAnalyser';
+import * as highlightManager from './highlightManager';
 
+
+const issueManager = new IssueManager();
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -23,12 +26,13 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const fllogan = new TestView(context);
-	const issueManager = new IssueManager();
 
 	context.subscriptions.push(disposable);
 
 	let runscriptsWithCurrent = vscode.commands.registerCommand('customisable-log-analyser.runscripts.current', () => {
-		logAnalyser.runWithTheCurrentFile(issueManager);
+		logAnalyser.runWithTheCurrentFile(issueManager).then(() => {
+			highlightManager.updateDecorations(issueManager.getRootNodes());
+		});
 	});
 
 	context.subscriptions.push(runscriptsWithCurrent);
@@ -39,6 +43,24 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(clearIssues);
+
+	activateDecorators(context);
+}
+
+function activateDecorators(context: vscode.ExtensionContext) {
+	if (vscode.window.activeTextEditor) {
+		highlightManager.updateDecorations(issueManager.getRootNodes());
+	}
+
+	vscode.window.onDidChangeActiveTextEditor(editor => {
+		if (editor) {
+			highlightManager.updateDecorations(issueManager.getRootNodes());
+		}
+	}, null, context.subscriptions);
+
+// 	vscode.workspace.onDidChangeTextDocument(event => {
+		
+// 	}, null, context.subscriptions);
 }
 
 // this method is called when your extension is deactivated

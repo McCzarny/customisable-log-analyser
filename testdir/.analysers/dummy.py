@@ -2,6 +2,7 @@ print("""{
     "issues": [{
     "level": "info",
     "title": "title from script",
-    "fileReference": "C:\\\\Users\\\\czarneckim\\\\repositories\\\\customisable-log-analyser\\\\CHANGELOG.md:5"
+    "description": "description",
+    "fileReference": "C:\\\\Users\\\\czarneckim\\\\repositories\\\\customisable-log-analyser\\\\CHANGELOG.md:3"
     }]
 }""")

@@ -43,8 +43,10 @@ export async function listAnalysers() {
 
 function processIssues(issueManager: IssueManager, issues: any[]) {
     issues.forEach(issue => {
+        const description = "description" in issue ? issue.description : undefined;
+
         if ("level" in issue && "title" in issue && "fileReference" in issue) {
-            issueManager.addIssue(issue.level, issue.title, issue.fileReference);
+            issueManager.addIssue(issue.level, issue.title, issue.description, issue.fileReference);
         }
     });
 }

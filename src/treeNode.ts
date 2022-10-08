@@ -24,10 +24,15 @@ export type TreeNode = Entry | EntryGroup | FileReference;
 
 export function createLevel(name: string) : TreeNode {
     let icon = null;
-    if (name === 'info') {
-        icon = 'extensions-info-message';
-    }
 
+    switch(name) {
+      case 'info':
+        icon = 'extensions-info-message'; break;
+      case 'warning':
+        icon = 'extensions-warning-message'; break;
+      case 'error':
+        icon = 'error'; break;
+    }
      let level = {name: name, icon: icon ,uri: [name], entries: []} as EntryGroup;
      console.debug("Created level: " + JSON.stringify(level, null, 4));
      return level;
@@ -42,7 +47,7 @@ function createFileReference(parentUri: string[], fileReference: string) : FileR
         fileNumber = parseInt(matches.value[2]);
     }
 
-    return {uri: [...parentUri, fileReference, fileNumber], filePath: fileReference, line: fileNumber} as FileReference;
+    return {uri: [...parentUri, fileReference, fileNumber], filePath: fileReference, line: Math.max(fileNumber - 1 , 0)} as FileReference;
 }
 
 export function createEntry(parent: TreeNode, title: string, description: string, fileReference: string) : TreeNode {
@@ -121,7 +126,7 @@ export function getAction(element: TreeNode): vscode.Command | undefined {
       arguments: [
         vscode.Uri.file(element.filePath),
         <vscode.TextDocumentShowOptions>{
-          selection: new vscode.Range(element.line - 1, 0, element.line - 1, 0),
+          selection: new vscode.Range(element.line, 0, element.line, 0),
         },
       ],
     };
