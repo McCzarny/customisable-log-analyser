@@ -113,6 +113,8 @@ export function updateDecorations(nodes: TreeNode[]) {
         }
     });
 
+    console.debug("Decorators: info: " + infoDecorations.length + " warning: " + warningDecorations.length + " error: " + errorDecorations.length);
+
     activeEditor.setDecorations(infoDecorationType, infoDecorations);
     activeEditor.setDecorations(warningDecorationType, warningDecorations);
     activeEditor.setDecorations(errorDecorationType, errorDecorations);

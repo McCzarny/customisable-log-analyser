@@ -62,15 +62,18 @@
       "view/title": [
         {
           "command": "customisable-log-analyser.runscripts.current",
-					"group": "navigation"
+					"group": "navigation",
+          "when": "view == customisable-log-analyser-view"
         },
         {
           "command": "customisable-log-analyser.runscripts.all",
-					"group": "navigation"
+					"group": "navigation",
+          "when": "view == customisable-log-analyser-view"
         },
         {
           "command": "customisable-log-analyser.clear",
-					"group": "navigation"
+					"group": "navigation",
+          "when": "view == customisable-log-analyser-view"
         }
       ]
     },
