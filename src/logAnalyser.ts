@@ -87,22 +87,57 @@ function execAnalysis(name: string, fileUri: string, analysersDirectory: string,
   return cmder();
 }
 
+async function analyseFile(fileUri: string, analysersDirectory: string, issueManager: IssueManager) {
+  console.debug("analyseFile: " + fileUri);
+
+  let promises : Promise<void>[] = [];
+  for (const [name, type] of await vscode.workspace.fs.readDirectory(
+    vscode.Uri.file(analysersDirectory),
+  )) {
+    console.debug(name);
+    if (type === vscode.FileType.File) {
+      promises.push(execAnalysis(name, fileUri, analysersDirectory, issueManager));
+    }
+  }
+  console.debug("waiting for all promises...");
+  await Promise.all(promises);
+}
+
+async function analyseDirectory(directory: string, analysersDirectory: string, issueManager: IssueManager) {
+  console.debug("analyseDirectory: " + directory);
+  let promises : Promise<void>[] = [];
+  for (const [name, type] of await vscode.workspace.fs.readDirectory(
+    vscode.Uri.file(directory),
+  )) {
+    if (type === vscode.FileType.File) {
+      promises.push(analyseFile(path.join(directory, name), analysersDirectory, issueManager));
+    } else if (type === vscode.FileType.Directory) {
+      promises.push(analyseDirectory(path.join(directory, name), analysersDirectory, issueManager));
+    }
+  }
+  await Promise.all(promises);
+}
+
+export async function runWithWorkspace(issueManager: IssueManager) {
+  console.debug("runWithWorkspace");
+  const analysersDirectory = getRootDir();
+  const workspaceFolder = vscode.workspace.workspaceFolders;
+  let promises : Promise<void>[] = [];
+  if (analysersDirectory && workspaceFolder) {
+    workspaceFolder.forEach(workspaceFolder => {
+      promises.push(analyseDirectory(workspaceFolder.uri.fsPath, analysersDirectory, issueManager));
+    });
+  }
+  await Promise.all(promises);
+  console.debug("runWithTheCurrentFile done");
+}
+
 export async function runWithTheCurrentFile(issueManager: IssueManager) {
   console.debug("runWithTheCurrentFile");
   const analysersDirectory = getRootDir();
   const fileUri = vscode.window.activeTextEditor?.document.uri.fsPath;
   if (analysersDirectory && fileUri) {
-    let promises : Promise<void>[] = [];
-    for (const [name, type] of await vscode.workspace.fs.readDirectory(
-      vscode.Uri.file(analysersDirectory),
-    )) {
-      console.debug(name);
-      if (type === vscode.FileType.File) {
-        promises.push(execAnalysis(name, fileUri, analysersDirectory, issueManager));
-      }
-    }
-    console.debug("waiting for all promises...");
-    await Promise.all(promises);
+    await analyseFile(fileUri, analysersDirectory, issueManager);
   }
   console.debug("runWithTheCurrentFile done");
 }

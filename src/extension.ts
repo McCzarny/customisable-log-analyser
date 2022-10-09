@@ -34,8 +34,13 @@ export function activate(context: vscode.ExtensionContext) {
 			highlightManager.updateDecorations(issueManager.getRootNodes());
 		});
 	});
-
 	context.subscriptions.push(runscriptsWithCurrent);
+	let runscriptsWithWorkspace = vscode.commands.registerCommand('customisable-log-analyser.runscripts.workspace', () => {
+		logAnalyser.runWithWorkspace(issueManager).then(() => {
+			highlightManager.updateDecorations(issueManager.getRootNodes());
+		});
+	});
+	context.subscriptions.push(runscriptsWithWorkspace);
 
 	
 	let clearIssues = vscode.commands.registerCommand('customisable-log-analyser.clear', () => {

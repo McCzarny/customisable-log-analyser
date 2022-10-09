@@ -43,7 +43,7 @@
     },
     "commands": [
       {
-        "command": "customisable-log-analyser.runscripts.all",
+        "command": "customisable-log-analyser.runscripts.workspace",
         "title": "Run scripts with the all files",
         "icon": "$(run-all)"
       },
@@ -66,7 +66,7 @@
           "when": "view == customisable-log-analyser-view"
         },
         {
-          "command": "customisable-log-analyser.runscripts.all",
+          "command": "customisable-log-analyser.runscripts.workspace",
 					"group": "navigation",
           "when": "view == customisable-log-analyser-view"
         },
@@ -84,6 +84,16 @@
           "type": ["string"],
           "default": ".analysers",
           "description": "Specifies the folder path containing the scripts for log analysis."
+        },        
+        "customisable-log-analyser.files.include": {
+          "type": ["array"],
+          "default": [],
+          "description": "Specify files to include when analysing files in a workspace. Use regex or literal names."
+        },
+        "customisable-log-analyser.files.exclude": {
+          "type": ["array"],
+          "default": [],
+          "description": "Specify files to include when analysing files in a workspace. Use regex or literal names."
         }
       }
     }
