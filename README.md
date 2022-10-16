@@ -1,6 +1,6 @@
-# customisable-log-analyser README
+# Fllogan README
 
-This is the README for your extension "customisable-log-analyser". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "Flexible Log Analyzer". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

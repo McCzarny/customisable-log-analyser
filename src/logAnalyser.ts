@@ -6,7 +6,7 @@ import { promises } from 'stream'
 
 function getRootDir(): string | undefined {
   let analysersDirectory = vscode.workspace
-    .getConfiguration('customisable-log-analyser')
+    .getConfiguration('fllogan')
     .get<string>('scripsDirectory')
   console.debug(analysersDirectory)
 

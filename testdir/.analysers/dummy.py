@@ -1,8 +1,10 @@
+import os
+
+dirname = os.path.dirname(__file__).replace("\\", "\\\\")
+
 print("""{
     "issues": [{
     "level": "info",
     "title": "title from script",
     "description": "description",
-    "fileReference": "C:\\\\Users\\\\czarneckim\\\\repositories\\\\customisable-log-analyser\\\\CHANGELOG.md:3"
-    }]
-}""")
+    "fileReference": \"""" + dirname + "\\\\..\\\\test-file.txt:1\"}]}")

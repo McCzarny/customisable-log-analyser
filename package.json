@@ -1,12 +1,12 @@
 {
-  "name": "customisable-log-analyser",
-  "displayName": "customisable-log-analyser",
+  "name": "flexible-log-analyzer",
+  "displayName": "Flexible Log Analyzer",
   "description": "Analyses and highlights log files with custom rules",
   "publisher": "Potato cake",
   "icon": "images/icon-placeholder.png",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/McCzarny/customisable-log-analyser"
+		"url": "https://github.com/McCzarny/flexible-log-analyzer"
 	},
   "version": "0.0.1",
   "engines": {
@@ -16,8 +16,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:customisable-log-analyser.helloWorld",
-		"onView:testView",
+    "onCommand:fllogan.helloWorld",
+		"onView:fllogan-view",
     "*"
   ],
   "main": "./dist/extension.js",
@@ -25,35 +25,35 @@
     "viewsContainers": {
 			"activitybar": [
 				{
-					"id": "customisable-log-analyser",
-					"title": "Customisable Log Analyser",
+					"id": "fllogan",
+					"title": "Flexible Log Analyzer",
 					"icon": "images/icon-placeholder.svg"
 				}
 			]
 		},
     "views": {
-			"customisable-log-analyser": [
+			"fllogan": [
 				{
-					"id": "customisable-log-analyser-view",
-					"name": "Customisable Log Analyser",
+					"id": "fllogan-view",
+					"name": "Flexible Log Analyzer",
 					"icon": "images/icon-placeholder.svg",
-					"contextualTitle": "Customisable Log Analyser"
+					"contextualTitle": "Flexible Log Analyzer"
 				}
 			]
     },
     "commands": [
       {
-        "command": "customisable-log-analyser.runscripts.workspace",
+        "command": "fllogan.runscripts.workspace",
         "title": "Run scripts with the all files",
         "icon": "$(run-all)"
       },
       {
-        "command": "customisable-log-analyser.runscripts.current",
+        "command": "fllogan.runscripts.current",
         "title": "Run scripts with the current file",
         "icon": "$(play)"
       },
       {
-        "command": "customisable-log-analyser.clear",
+        "command": "fllogan.clear",
         "title": "Clear all issues",
         "icon": "$(clear-all)"
       }
@@ -61,36 +61,36 @@
 		"menus": {
       "view/title": [
         {
-          "command": "customisable-log-analyser.runscripts.current",
+          "command": "fllogan.runscripts.current",
 					"group": "navigation",
-          "when": "view == customisable-log-analyser-view"
+          "when": "view == fllogan-view"
         },
         {
-          "command": "customisable-log-analyser.runscripts.workspace",
+          "command": "fllogan.runscripts.workspace",
 					"group": "navigation",
-          "when": "view == customisable-log-analyser-view"
+          "when": "view == fllogan-view"
         },
         {
-          "command": "customisable-log-analyser.clear",
+          "command": "fllogan.clear",
 					"group": "navigation",
-          "when": "view == customisable-log-analyser-view"
+          "when": "view == fllogan-view"
         }
       ]
     },
     "configuration": {
-      "title": "Customisable Log Analyser",
+      "title": "Flexible Log Analyzer",
       "properties": {
-        "customisable-log-analyser.scripsDirectory": {
+        "fllogan.scripsDirectory": {
           "type": ["string"],
           "default": ".analysers",
           "description": "Specifies the folder path containing the scripts for log analysis."
         },        
-        "customisable-log-analyser.files.include": {
+        "fllogan.files.include": {
           "type": ["array"],
           "default": [],
           "description": "Specify files to include when analysing files in a workspace. Use regex or literal names."
         },
-        "customisable-log-analyser.files.exclude": {
+        "fllogan.files.exclude": {
           "type": ["array"],
           "default": [],
           "description": "Specify files to include when analysing files in a workspace. Use regex or literal names."

@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import { TreeNode } from './treeNode';
 import * as treeNode from './treeNode';
 
-export class TestView {
+export class IssueView {
   constructor(context: vscode.ExtensionContext) {
     const view = vscode.window.createTreeView(
-      'customisable-log-analyser-view',
+      'fllogan-view',
       {
         treeDataProvider: aNodeWithIdTreeDataProvider(),
         showCollapseAll: true,
@@ -20,6 +20,19 @@ const event: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter
 
 export class IssueManager {
     constructor() {}
+
+    showStatus(status: string) {
+      let statusNode = treeNode.getStatus(status);
+      nodes.unshift(statusNode);
+      event.fire(statusNode);
+    }
+
+    hideStatus() {
+      if (nodes[0].uri.at(0) === "status") {
+        nodes.shift();
+        event.fire(undefined);
+      }
+    }
 
     getOrAddLevel(name: string) : TreeNode {
         for (const node of nodes) {

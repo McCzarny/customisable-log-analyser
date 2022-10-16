@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { TestView, IssueManager } from './issueView';
+import { IssueView, IssueManager } from './issueView';
 import * as logAnalyser from './logAnalyser';
 import * as highlightManager from './highlightManager';
 
@@ -14,36 +14,40 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "customisable-log-analyser" is now active!');
+	console.log('Congratulations, your extension "Flexible Log Analyzer" is now active!');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('customisable-log-analyser.helloWorld', () => {
+	let disposable = vscode.commands.registerCommand('fllogan.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from customisable-log-analyser!');
+		vscode.window.showInformationMessage('Hello World from Flexible Log Analyzer!');
 	});
 
-	const fllogan = new TestView(context);
+	const fllogan = new IssueView(context);
 
 	context.subscriptions.push(disposable);
 
-	let runscriptsWithCurrent = vscode.commands.registerCommand('customisable-log-analyser.runscripts.current', () => {
+	let runscriptsWithCurrent = vscode.commands.registerCommand('fllogan.runscripts.current', () => {
+		issueManager.showStatus("Checking the current file...");
 		logAnalyser.runWithTheCurrentFile(issueManager).then(() => {
 			highlightManager.updateDecorations(issueManager.getRootNodes());
+			issueManager.hideStatus();
 		});
 	});
 	context.subscriptions.push(runscriptsWithCurrent);
-	let runscriptsWithWorkspace = vscode.commands.registerCommand('customisable-log-analyser.runscripts.workspace', () => {
+	let runscriptsWithWorkspace = vscode.commands.registerCommand('fllogan.runscripts.workspace', () => {
+		issueManager.showStatus("Checking the workspace...");
 		logAnalyser.runWithWorkspace(issueManager).then(() => {
 			highlightManager.updateDecorations(issueManager.getRootNodes());
+			issueManager.hideStatus();
 		});
 	});
 	context.subscriptions.push(runscriptsWithWorkspace);
 
 	
-	let clearIssues = vscode.commands.registerCommand('customisable-log-analyser.clear', () => {
+	let clearIssues = vscode.commands.registerCommand('fllogan.clear', () => {
 		issueManager.clearIssues();
 	});
 

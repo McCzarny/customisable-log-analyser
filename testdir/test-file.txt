@@ -1,0 +1,9 @@
+Line with info
+
+Line with warning
+
+Line with error
+
+Line with info
+
+Line with info

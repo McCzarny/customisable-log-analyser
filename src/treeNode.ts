@@ -20,7 +20,16 @@ interface EntryGroup {
   entries: Entry[]
 }
 
-export type TreeNode = Entry | EntryGroup | FileReference;
+class Status {
+  constructor(status: string) {
+    this.name = status;
+  }
+
+  uri: string[] = ["status"];
+  name: string = "Status";
+}
+
+export type TreeNode = Entry | EntryGroup | FileReference | Status;
 
 export function createLevel(name: string) : TreeNode {
     let icon = null;
@@ -82,7 +91,7 @@ export function getOrAddEntry(parent: TreeNode, title: string, description: stri
 }
 
 export function isLeafNode(element: TreeNode): boolean {
-  return !('filePath' in element);
+  return !('filePath' in element) && element.uri[0] !== "status";
 }
 
 export function getLabel(element: TreeNode): string {
@@ -133,4 +142,8 @@ export function getAction(element: TreeNode): vscode.Command | undefined {
   }
 
   return undefined;
+}
+
+export function getStatus(status: string): TreeNode {
+  return new Status(status);
 }
